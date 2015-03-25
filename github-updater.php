@@ -12,7 +12,7 @@
 Plugin Name:       GitHub Updater
 Plugin URI:        https://github.com/afragen/github-updater
 Description:       A plugin to automatically update GitHub or Bitbucket hosted plugins and themes. It also allows for remote installation of plugins or themes into WordPress. Plugin class based upon <a href="https://github.com/codepress/github-plugin-updater">codepress/github-plugin-updater</a>. Theme class based upon <a href="https://github.com/WordPress-Phoenix/whitelabel-framework">Whitelabel Framework</a> modifications.
-Version:           4.2.0.5
+Version:           4.2.0.9
 Author:            Andy Fragen
 License:           GNU General Public License v2
 License URI:       http://www.gnu.org/licenses/gpl-2.0.html
@@ -34,8 +34,9 @@ if ( ! defined( 'WPINC' ) ) {
 
 require_once ( plugin_dir_path( __FILE__ ) . '/vendor/WPUpdatePhp.php' );
 $updatePhp = new WPUpdatePhp( '5.3.0' );
+$updatePhp->set_plugin_name( 'GitHub Updater' );
 
-if ( ! $updatePhp->does_my_plugin_meet_required_php_version( __FILE__ ) ) {
+if ( ! $updatePhp->does_it_meet_required_php_version() ) {
 	return false;
 }
 
@@ -53,15 +54,16 @@ $extra_classes = array(
 
 // Load Autoloader
 require_once( __DIR__ . '/src/GitHub_Updater/Autoloader.php' );
-$class_loader = 'Fragen\GitHub_Updater\Autoloader';
-new $class_loader( $root, $extra_classes );
+$loader = 'Fragen\\GitHub_Updater\\Autoloader';
+new $loader( $root, $extra_classes );
 
 // Instantiate class GitHub_Updater
-new Fragen\GitHub_Updater\Base;
+$instantiate = 'Fragen\\GitHub_Updater\\Base';
+new $instantiate;
 
 /**
  * Calls Fragen\GitHub_Updater\Base::init() in init hook so other remote upgrader apps like
  * InfiniteWP, ManageWP, MainWP, and iThemes Sync will load and use all
  * of GitHub_Updater's methods, especially renaming.
  */
-add_action( 'init', array( 'Fragen\GitHub_Updater\Base', 'init' ) );
+add_action( 'init', array( 'Fragen\\GitHub_Updater\\Base', 'init' ) );
